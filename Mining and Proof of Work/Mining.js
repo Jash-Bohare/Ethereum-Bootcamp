@@ -7,32 +7,32 @@ const mempool = [];
 const blocks = [];
 
 function addTransaction(transaction) {
-  mempool.push(transaction);
+    mempool.push(transaction);
 }
 
 function mine() {
-  const block = {
-    id: blocks.length,
-    transactions: mempool.splice(0, MAX_TRANSACTIONS),
-    nonce: 0
-  };
+    const block = {
+        id: blocks.length,
+        transactions: mempool.splice(0, MAX_TRANSACTIONS),
+        nonce: 0
+    };
 
-  while (true) {
-    const str = JSON.stringify(block);
-    const bytes = utf8ToBytes(str);
-    const hashBytes = sha256(bytes);
-    const hashHex = toHex(hashBytes);
+    while (true) {
+        const str = JSON.stringify(block);
+        const bytes = utf8ToBytes(str);
+        const hashBytes = sha256(bytes);
+        const hashHex = toHex(hashBytes);
 
-    const hashInt = BigInt(`0x${hashHex}`);
+        const hashInt = BigInt(`0x${hashHex}`);
 
-    if (hashInt < TARGET_DIFFICULTY) {
-      block.hash = hashHex;
-      break;
+        if (hashInt < TARGET_DIFFICULTY) {
+            block.hash = hashHex;
+            break;
+        }
+
+        block.nonce++;
     }
 
-    block.nonce++;
-  }
-
-  blocks.push(block);
-  return block;
+    blocks.push(block);
+    return block;
 }
